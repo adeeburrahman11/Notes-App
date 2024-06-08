@@ -2,6 +2,10 @@ import React from "react";
 import TagInput from "../../components/Input/TagInput";
 
 const AddEditNotes = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState("");
+
   return (
     <div>
       <div className="flex flex-col gap-2">
