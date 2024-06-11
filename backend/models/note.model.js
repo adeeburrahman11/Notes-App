@@ -10,4 +10,4 @@ const noteSchema = new Schema({
   createdOn: { type: Date, default: new Date().getTime() },
 });
 
-model.exports.mongoose("Note", noteSchema);
+module.exports.mongoose("Note", noteSchema);
