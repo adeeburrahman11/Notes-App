@@ -23,7 +23,7 @@ const LogIn = () => {
     }
 
     setError("");
-    //log in API call
+    //log in API calling
   };
 
   return (
