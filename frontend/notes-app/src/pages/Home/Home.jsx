@@ -35,13 +35,12 @@ const Home = () => {
 
   useEffect(() => {
     getUserInfo();
-
     return () => {};
   }, []);
 
   return (
     <>
-      <NavBar />
+      <NavBar userInfo={userInfo} />
 
       <div className="container mx-auto">
         <div className="grid grid-cols-3 gap-4 mt-8">
