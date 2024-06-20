@@ -19,6 +19,10 @@ const Home = () => {
 
   const navigate = useNavigate();
 
+  const handleEdit = (noteDetails) => {
+    setOpenAddEditmodal({ isShown: true, data: noteDetails, type: "edit" });
+  };
+
   //get user info
   const getUserInfo = async () => {
     try {
@@ -67,7 +71,7 @@ const Home = () => {
               content={item.content}
               tags={item.tags}
               isPinned={item.isPinned}
-              onEdit={() => {}}
+              onEdit={() => handleEdit(item)}
               onDelete={() => {}}
               onPinNote={() => {}}
             />
@@ -96,6 +100,7 @@ const Home = () => {
           onClose={() => {
             setOpenAddEditmodal({ isShown: false, type: "add", data: null });
           }}
+          getAllNotes={getAllNotes}
         />
       </Modal>
     </>
