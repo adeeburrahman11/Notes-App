@@ -35,11 +35,14 @@ const SignUp = () => {
 
     //sign up API call
     try {
-      const response = await axiosInstance.post("/create-account", {
-        fullName: name,
-        email: email,
-        password: password,
-      });
+      const response = await axiosInstance.post(
+        "https://notes-app-backend-adeeb.vercel.app/create-account",
+        {
+          fullName: name,
+          email: email,
+          password: password,
+        }
+      );
 
       //handle successful signup
       if (response.data && response.data.error) {
