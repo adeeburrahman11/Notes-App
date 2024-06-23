@@ -11,24 +11,24 @@ const Note = require("./models/note.model");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-app.use(
-  cors({
-    origin: [""],
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: [""],
+//     methods: ["POST", "GET", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
 
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities");
 
 app.use(express.json());
 
-// app.use(
-//   cors({
-//     origin: "*",
-//   })
-// );
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.get("/", (req, res) => {
   res.json({ data: "hello" });

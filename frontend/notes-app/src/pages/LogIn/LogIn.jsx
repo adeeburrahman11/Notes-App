@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { validateEmail } from "../../utils/help";
 import axiosInstance from "../../utils/axiosInstance";
-import { BASE_URL } from "../../utils/constants";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +28,7 @@ const LogIn = () => {
     setError("");
     //log in API call
     try {
-      const response = await axiosInstance.post(`${BASE_URL}/login`, {
+      const response = await axiosInstance.post("/login", {
         email: email,
         password: password,
       });
