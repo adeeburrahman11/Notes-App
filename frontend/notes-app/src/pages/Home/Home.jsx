@@ -9,6 +9,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import Toast from "../../components/ToastMessage/Toast";
 import EmptyCard from "../../components/EmptyCard/EmptyCard";
 import AddNotesImg from "../../assets/images/add-notes.svg";
+import NoNotes from "../../assets/images/no-notes.svg";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditmodal] = useState({
@@ -25,6 +26,8 @@ const Home = () => {
 
   const [allNotes, setAllNotes] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+
+  const [isSearch, setIsSearch] = useState(false);
 
   const navigate = useNavigate();
 
@@ -96,6 +99,27 @@ const Home = () => {
     }
   };
 
+  //search note
+  const onSearchNote = async (query) => {
+    try {
+      const response = await axiosInstance.get("/search-notes", {
+        params: { query },
+      });
+
+      if (response.data && response.data.notes) {
+        setIsSearch(true);
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setIsSearch(false);
+    getAllNotes();
+  };
+
   useEffect(() => {
     getAllNotes();
     getUserInfo();
@@ -104,7 +128,11 @@ const Home = () => {
 
   return (
     <>
-      <NavBar userInfo={userInfo} />
+      <NavBar
+        userInfo={userInfo}
+        onSearchNote={onSearchNote}
+        handleClearSearch={handleClearSearch}
+      />
       <div className="container mx-auto">
         {allNotes.length > 0 ? (
           <div className="grid grid-cols-3 gap-4 mt-8">
@@ -124,8 +152,12 @@ const Home = () => {
           </div>
         ) : (
           <EmptyCard
-            imgSrc={AddNotesImg}
-            message={`Welcome to your personal notebook! Your ideas, dreams, and plans are waiting to be captured. Start by clicking the 'Add' button for adding your first note and let your creativity flow.`}
+            imgSrc={isSearch ? NoNotes : AddNotesImg}
+            message={
+              isSearch
+                ? `No notes found matching your search`
+                : `Welcome to your personal notebook! Your ideas, dreams, and plans are waiting to be captured. Start by clicking the 'Add' button for adding your first note and let your creativity flow.`
+            }
           />
         )}
       </div>
