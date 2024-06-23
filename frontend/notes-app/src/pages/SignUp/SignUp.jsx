@@ -4,6 +4,7 @@ import PasswordInput from "../../components/Input/PasswordInput";
 import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utils/help";
 import axiosInstance from "../../utils/axiosInstance";
+import { BASE_URL } from "../../utils/constants";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -35,7 +36,7 @@ const SignUp = () => {
 
     //sign up API call
     try {
-      const response = await axiosInstance.post("/create-account", {
+      const response = await axiosInstance.post(`${BASE_URL}/create-account`, {
         fullName: name,
         email: email,
         password: password,

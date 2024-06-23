@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
+import { BASE_URL } from "../../utils/constants";
 
 const AddEditNotes = ({
   noteData,
@@ -19,7 +20,7 @@ const AddEditNotes = ({
   //add note
   const addNewNote = async () => {
     try {
-      const response = await axiosInstance.post("/add-note", {
+      const response = await axiosInstance.post(`${BASE_URL}/add-note`, {
         title,
         content,
         tags,
@@ -45,11 +46,14 @@ const AddEditNotes = ({
   const editNote = async () => {
     const noteId = noteData._id;
     try {
-      const response = await axiosInstance.put("/edit-note/" + noteId, {
-        title,
-        content,
-        tags,
-      });
+      const response = await axiosInstance.put(
+        `${BASE_URL}/edit-note/` + noteId,
+        {
+          title,
+          content,
+          tags,
+        }
+      );
 
       if (response.data && response.data.note) {
         showToastMessage("Note Updated Successfully");
