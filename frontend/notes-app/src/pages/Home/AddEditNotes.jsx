@@ -104,7 +104,7 @@ const AddEditNotes = ({
         <input
           type="text"
           className="text-2xl text-slate-950 outline-none"
-          placeholder="Go To Gym At 5"
+          placeholder="Add title"
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         />
