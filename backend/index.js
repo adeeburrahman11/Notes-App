@@ -11,6 +11,8 @@ const Note = require("./models/note.model");
 const express = require("express");
 const cors = require("cors");
 const app = express();
+
+const PORT = process.env.PORT || 8000;
 // app.use(
 //   cors({
 //     origin: [""],
@@ -317,6 +319,6 @@ app.get("/search-notes/", authenticateToken, async (req, res) => {
   }
 });
 
-app.listen(8000);
+app.listen(PORT);
 
 module.exports = app;
