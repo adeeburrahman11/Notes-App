@@ -84,6 +84,14 @@ const LogIn = () => {
                 Create an Account
               </Link>
             </p>
+            <p className="text-sm text-center mt-4">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-primary underline"
+              >
+                Forgot Password?
+              </Link>
+            </p>
           </form>
         </div>
       </div>
