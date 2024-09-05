@@ -13,6 +13,9 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+
 const PORT = process.env.PORT || 8000;
 // app.use(
 //   cors({
@@ -319,6 +322,67 @@ app.get("/search-notes/", authenticateToken, async (req, res) => {
       .json({ error: true, message: "Internal server error" });
   }
 });
+
+//forgot password
+app.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: true, message: "Email is required" });
+  }
+
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    return res.status(400).json({ error: true, message: "User not found" });
+  }
+
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  const resetPasswordExpires = Date.now() + 300000; // Token expires in 5 minutes
+
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = resetPasswordExpires;
+
+  await user.save();
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+
+  // Set up email transporter
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    to: user.email,
+    from: process.env.EMAIL_USER,
+    subject: "Password Reset For Notes-App",
+    text: `You are receiving this because you (or someone else) have requested the reset of the password for your account in Notes-App.\n\n
+    Please click on the following link, or paste this into your browser to complete the process:\n\n
+    ${resetUrl}\n\n
+    If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+  };
+
+  transporter.sendMail(mailOptions, (err) => {
+    if (err) {
+      console.error("Error sending email:", err);
+      return res.status(500).json({
+        error: true,
+        message: "Error sending email. Please try again later.",
+      });
+    }
+
+    res.json({
+      error: false,
+      message: "Reset link sent successfully. Check your email.",
+    });
+  });
+});
+
+//reset password
 
 app.listen(PORT);
 
