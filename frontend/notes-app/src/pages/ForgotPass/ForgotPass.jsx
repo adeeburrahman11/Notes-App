@@ -32,7 +32,9 @@ const ForgotPass = () => {
     setSuccess("");
 
     try {
-      const response = await axiosInstance.post("/forgot-password", { email });
+      const response = await axiosInstance.post(`${BASE_URL}/forgot-password`, {
+        email,
+      });
 
       if (response.data.error) {
         setError(response.data.message);
@@ -58,7 +60,7 @@ const ForgotPass = () => {
           <form onSubmit={handleSubmit}>
             <h4 className="text-2xl mb-7">Enter Email</h4>
             <input
-              type="email"
+              type="text"
               placeholder="yourname@email.com"
               className="input-box"
               value={email}

@@ -15,6 +15,7 @@ const app = express();
 
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
 
 const PORT = process.env.PORT || 8000;
 // app.use(
@@ -383,6 +384,40 @@ app.post("/forgot-password", async (req, res) => {
 });
 
 //reset password
+app.post("/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ error: true, message: "Token is required" });
+  }
+  if (!newPassword) {
+    return res
+      .status(400)
+      .json({ error: true, message: "New password is required" });
+  }
+
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Invalid or expired token" });
+  }
+
+  user.password = newPassword; // Hash this password before saving if required
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+
+  res.json({
+    error: false,
+    message: "Password has been reset successfully",
+  });
+});
 
 app.listen(PORT);
 

@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
+import axiosInstance from "../../utils/axiosInstance"; // Ensure this import exists
 
 const ResetPass = () => {
-  const [password, setPassword] = React.useState("");
-  //   const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Retrieve token from URL query parameters
+  const token = new URLSearchParams(location.search).get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,18 +25,17 @@ const ResetPass = () => {
     setError("");
     setSuccess("");
 
-    //reset-api call
     try {
-      const response = await axiosInstance.post(`${BASE_URL}/reset-password`, {
+      const response = await axiosInstance.post("/reset-password", {
         token,
         newPassword: password,
       });
 
-      if (response.data.success) {
+      if (response.data.error) {
+        setError(response.data.message); // Display server error if any
+      } else {
         setSuccess("Your password has been reset successfully.");
         setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
-      } else {
-        setError("Failed to reset password. Please try again.");
       }
     } catch (err) {
       setError("An error occurred. Please try again later.");
@@ -46,13 +48,7 @@ const ResetPass = () => {
       <div className="flex items-center justify-center mt-28">
         <div className="w-96 border rounded bg-white px-7 py-10">
           <form onSubmit={handleSubmit}>
-            <h4 className="text-2xl mb-7">Enter new password</h4>
-            {/* <input
-              type="text"
-              placeholder="yourname@email.com"
-              className="input-box"
-              onChange={(val) => setPassword(val.toLocalString())}
-            /> */}
+            <h4 className="text-2xl mb-7">Enter New Password</h4>
 
             <PasswordInput
               value={password}
@@ -63,9 +59,10 @@ const ResetPass = () => {
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {success && <p className="text-green-500 text-sm">{success}</p>}
 
-            <button type="submit" className="btn-primary">
+            <button type="submit" className="btn-primary w-full mt-4">
               Reset Password
             </button>
+
             <p className="text-sm text-center mt-4">
               <Link to="/login" className="font-medium text-primary underline">
                 Remember Suddenly?
